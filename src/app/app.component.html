@@ -1,0 +1,223 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-md">
+    <h4 class="navbar-brand fs-5 mx-auto">
+      Calculadora FIPE <i class="bi bi-calculator"></i>
+    </h4>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="row">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formularioFipe">
+      <div class="row">
+        <div class="col-xs-6 col-md-2">
+          <label class="mb-1">Tipo</label>
+          <select class="form-select" formControlName="tipo">
+            <option value="carros">Carros</option>
+            <option value="motos">Motos</option>
+            <option value="caminhoes">Caminhões</option>
+          </select>
+        </div>
+
+        <div class="col-xs-6 col-md-4">
+          <label for="tipo" class="mb-1">Marca</label>
+          <select class="form-select" formControlName="marca">
+            <option selected value="">- Selecione uma marca -</option>
+            <option *ngFor="let marca of marcas" [value]="marca.codigo">
+              {{ marca.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-xs-6 col-md-4">
+          <label for="tipo" class="mb-1">Modelo</label>
+          <select class="form-select" formControlName="modelo">
+            <option selected value="">- Selecione um modelo -</option>
+            <option *ngFor="let modelo of modelos" [value]="modelo.codigo">
+              {{ modelo.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-xs-6 col-md-2">
+          <label for="tipo" class="mb-1">Ano</label>
+          <select class="form-select" formControlName="ano">
+            <option selected value="">- Selecione o ano -</option>
+            <option *ngFor="let ano of anos" [value]="ano.codigo">
+              {{ ano.nome }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-xs-6 col-md-7">
+          <label class="mb-1">Valor de venda</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text"
+              ><i class="bi bi-currency-dollar"></i
+            ></span>
+            <input
+              type="number"
+              min="1"
+              placeholder="200.000,00"
+              class="form-control"
+              formControlName="valor"
+            />
+          </div>
+        </div>
+
+        <div class="col-xs-6 col-md-5 gy-4">
+          <div class="d-grid mt-1">
+            <button
+              class="btn btn-success hover-overlay ripple shadow-strong"
+              [disabled]="!formularioFipe.valid"
+            >
+              CONSULTAR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="carregandoDados">
+        <div class="col-xs-12 col-md-12">
+          <div class="d-flex justify-content-center">
+            <div class="d-flex align-items-center">
+              <strong style="margin-right: 10px;">Carregando...</strong>
+              <div class="spinner-border" role="status" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </form>
+  </div>
+  <hr />
+</div>
+
+<div class="container mt-2" *ngIf="!formularioFoiEnviado">
+  <div class="row text-center text-muted">
+    <h3>O resultado do cálculo aparecerá aqui!</h3>
+  </div>
+</div>
+
+<div class="container p-5" id="main" *ngIf="formularioFoiEnviado && formularioFipe.valid">
+  <div class="row mb-2">
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5">Marca:</p>
+    </div>
+
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5 text-muted">{{ dadosGerais.Marca }}</p>
+    </div>
+
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5">Valor do veículo:</p>
+    </div>
+
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5 text-muted">{{ valorPagoFormatado }}</p>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5">Modelo:</p>
+    </div>
+    
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5 text-muted">{{ dadosGerais.Modelo }}</p>
+    </div>
+
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5">Valor pela FIPE</p>
+    </div>
+
+    <div class="col-xs-3 col-md-3">
+      <p class="fs-5 text-muted">{{ dadosGerais.Valor }}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6 col-md-6">
+      <div class="shrink">
+        <div class="row mb-2">
+          <div class="col-xs-6 col-md-6">
+            <p class="fs-5">Ano do modelo:</p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <p class="fs-5 text-muted">{{ dadosGerais.AnoModelo }}</p>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-xs-6 col-md-6">
+            <p class="fs-5">Codigo FIPE:</p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <p class="fs-5 text-muted">{{ dadosGerais.CodigoFipe }}</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-xs-6 col-md-6">
+            <p class="fs-5">Mês referência:</p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <p class="fs-5 text-muted">{{ dadosGerais.MesReferencia }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-6 col-md-6">
+      <div *ngIf="porcentagemFipe >= 10">
+        <p class="mb-0 fs-5 text-success text-center" style="font-weight: 400">
+          Valor do veículo abaixo da tabela FIPE
+        </p>
+        <h1 class="text-success text-center fipe" style="font-weight: 600">
+          {{ Math.abs(porcentagemFipe) }}%
+        </h1>
+      </div>
+
+      <div *ngIf="porcentagemFipe <= -10">
+        <p class="mb-0 fs-5 text-danger text-center" style="font-weight: 400">
+          Valor do veículo acima da tabela FIPE
+        </p>
+        <h1 class="text-danger text-center fipe" style="font-weight: 600">
+          {{ Math.abs(porcentagemFipe) }}%
+        </h1>
+      </div>
+
+      <div *ngIf="porcentagemFipe >= -9.99 && porcentagemFipe <= 9.99">
+        <p class="mb-0 fs-5 text-warning text-center" style="font-weight: 600">
+          Valor do veículo na média da tabela FIPE
+        </p>
+        <h1
+          class="text-success text-center text-warning fipe"
+          style="font-weight: 600"
+        >
+          {{porcentagemFipe}}%
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3" *ngIf="porcentagemFipe >= 10">
+    <div class="alert alert-success" role="alert">
+      <h4 class="text-success text-center">Valor abaixo do mercado</h4>
+    </div>
+  </div>
+  
+  <div class="row mt-3" *ngIf="porcentagemFipe <= -10">
+    <div class="alert alert-danger" role="alert">
+      <h4 class="text-danger text-center">Valor acima do mercado</h4>
+    </div>
+  </div>
+
+  <div class="row mt-3" *ngIf="porcentagemFipe >= -9.99 && porcentagemFipe <= 9.99">
+    <div class="alert alert-warning" role="alert">
+      <h4 class="text-warning text-center">Valor de mercado</h4>
+    </div>
+  </div>
+</div>

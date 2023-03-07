@@ -1,0 +1,19 @@
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+select.ng-invalid.ng-touched,
+input.ng-invalid.ng-touched {
+    border: 1px solid red;
+}
+
+#main {
+    max-width: 950px;
+}
+
+.shrink {
+    max-width: 438px;
+}
+
+.fipe {
+    margin: 0;
+    font-size: 100px;
+}
